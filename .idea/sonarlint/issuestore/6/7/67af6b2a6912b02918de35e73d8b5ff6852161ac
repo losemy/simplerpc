@@ -1,0 +1,6 @@
+
+Gsquid:S1481:")Remove this unused "name" local variable.(š§¡8˜ÁìÄß-
+Vsquid:S1854:"8Remove this useless assignment to local variable "name".(š§¡8˜ÁìÄß-
+Msquid:EmptyStatementUsageCheckB"Remove this empty statement.(ò¬İ8Æ®ÂÈß-
+Fsquid:S1604="(Make this anonymous inner class a lambda(Ÿàáİ8Æ®ÂÈß-
+Lsquid:S3077".Remove the "volatile" keyword from this field.(üöùú8Ö“îÄß-
