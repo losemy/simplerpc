@@ -40,5 +40,6 @@ public class ZooKeeperServiceRegistry implements ServiceRegistry {
         String addressPath = servicePath + "/address-";
         String addressNode = zkClient.createEphemeralSequential(addressPath, serviceAddress);
         log.debug("create address node: {}", addressNode);
+
     }
 }

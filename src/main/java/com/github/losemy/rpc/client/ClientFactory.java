@@ -84,6 +84,8 @@ public class ClientFactory extends InstantiationAwareBeanPostProcessorAdapter im
                         }
                         connectManager.addServer(name,serviceAddress);
 
+                        //todo 需要保证 host + port唯一 避免启动多个客户端连接同一个服务端
+                        //上面只是保证同一个服务不启动多个
                         RpcClient client = new RpcClient(host, port, name);
                         //启动连接
                         client.start();
