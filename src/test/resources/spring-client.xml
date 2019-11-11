@@ -19,7 +19,7 @@
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
     </bean>
 
-    <bean id="clientFactory" class="com.github.losemy.rpc.client.ClientFactory"/>
+    <bean id="clientFactory" class="com.github.losemy.rpc.client.ClientManager"/>
 
     <bean id="testBean" class="com.github.losemy.rpc.test.client.TestBean"/>
 

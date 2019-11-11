@@ -1,5 +1,6 @@
 package com.github.losemy.rpc.client;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.losemy.rpc.common.bean.RpcRequest;
 import com.github.losemy.rpc.common.bean.RpcResponse;
 import com.github.losemy.rpc.register.ServiceDiscovery;
@@ -58,17 +59,33 @@ public class RpcProxy {
                         // 创建 RPC 客户端对象并发送 RPC 请求
                         String name = ServiceUtil.buildServiceName(request.getInterfaceName(),request.getServiceVersion());
 
-                        log.info("invoke {}" , name);
-                        RpcClientHandler handler = ConnectManager.getInstance().getRpcClientHandler(name);
+                        String address = serviceDiscovery.discover(name);
 
-                        log.info("handler {}" , handler != null );
-                        CompletableFuture<RpcResponse> rpcResponse = handler.sendRequest(request);
+                        if(StrUtil.isNotEmpty(address)) {
+                            log.info("invoke {}", name);
+                            String[] addressSplit = StrUtil.splitToArray(address, ':');
 
-                        RpcResponse response = rpcResponse.get();
-                        if(response.getException() == null) {
-                            return response.getResult();
+                            String host = addressSplit[0];
+                            int port = Integer.parseInt(addressSplit[1]);
+
+                            //TODO 依赖于主动调用 也就意味着服务会在失败一次后才成功
+                            RpcClientHandler handler = RpcClientFactory.getHandlerByAddress(name, host, port);
+
+                            log.info("handler {}", handler != null);
+                            if(handler != null) {
+                                CompletableFuture<RpcResponse> rpcResponse = handler.sendRequest(request);
+
+                                RpcResponse response = rpcResponse.get();
+                                if (response.getException() == null) {
+                                    return response.getResult();
+                                } else {
+                                    throw response.getException();
+                                }
+                            }else{
+                                throw new Exception("为建立连接");
+                            }
                         }else{
-                            throw response.getException();
+                            throw new Exception("服务未找到");
                         }
                     }
 

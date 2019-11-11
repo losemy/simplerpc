@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2019-10-23
  **/
 @Slf4j
-public class ClientFactory extends InstantiationAwareBeanPostProcessorAdapter implements ApplicationContextAware {
+public class ClientManager extends InstantiationAwareBeanPostProcessorAdapter implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -30,7 +30,6 @@ public class ClientFactory extends InstantiationAwareBeanPostProcessorAdapter im
     @Override
     public boolean postProcessAfterInstantiation(final Object bean, final String beanName) throws BeansException {
 
-        log.info("test inject");
         ReflectionUtils.doWithFields(bean.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
@@ -43,14 +42,15 @@ public class ClientFactory extends InstantiationAwareBeanPostProcessorAdapter im
 
                     RpcReference rpcReference = field.getAnnotation(RpcReference.class);
                     String version = rpcReference.version();
-                    String inName = interfaceName.getName();
-                    String name = ServiceUtil.buildServiceName(inName,version);
+                    String serviceName = interfaceName.getName();
+                    String nameVersion = ServiceUtil.buildServiceName(serviceName,version);
                     //代理
 
-                    log.info("interfaceName {}" , inName);
+                    log.info("interfaceName {}" , serviceName);
 
                     //获取数据
                     RpcProxy proxy = applicationContext.getBean(RpcProxy.class);
+
                     Object serviceProxy = proxy.create(interfaceName,version);
 
                     ServiceDiscovery serviceDiscovery = applicationContext.getBean(ServiceDiscovery.class);
@@ -58,43 +58,21 @@ public class ClientFactory extends InstantiationAwareBeanPostProcessorAdapter im
                     List<String> addressList = null;
                     // 获取 RPC 服务地址
                     if (serviceDiscovery != null) {
-                        String serviceName = interfaceName.getName();
-                        if (StrUtil.isNotEmpty(version)) {
-                            serviceName += "-" + version;
-                        }
-                        addressList = serviceDiscovery.discover(serviceName);
-                        log.info("serviceName {} addressList {}",name,addressList);
+                        addressList = serviceDiscovery.findAllServer(nameVersion);
+                        log.info("serviceName {} addressList {}",nameVersion,addressList);
                     }
                     if (CollectionUtil.isEmpty(addressList)) {
                         log.error("server address is empty");
-                        throw new RuntimeException("server address is empty");
                     }
+
                     // 从 RPC 服务地址中解析主机名与端口号
-                    for(String serviceAddress:addressList) {
-                        log.info("serviceAddress {}",serviceAddress);
-                        String[] array = StrUtil.split(serviceAddress, ":");
-                        String host = array[0];
-                        int port = Integer.parseInt(array[1]);
-
-                        ConnectManager connectManager = ConnectManager.getInstance();
-                        List<String> servers = connectManager.getServers(name);
-                        if(CollectionUtil.contains(servers,serviceAddress)){
-                            //已开启对应服务
-                            continue;
-                        }
-                        connectManager.addServer(name,serviceAddress);
-
-                        //todo 需要保证 host + port唯一 避免启动多个客户端连接同一个服务端
-                        //上面只是保证同一个服务不启动多个
-                        RpcClient client = new RpcClient(host, port, name);
-                        //启动连接
-                        client.start();
-                    }
-
+                    boolean connected = connectServer(nameVersion, addressList);
+                    // 可能是服务未开启
+                    log.info("server {} connected {}",nameVersion,connected ? "succeed" : "failed");
                     // set bean
                     field.setAccessible(true);
+                    //替换对象
                     field.set(bean, serviceProxy);
-
 
                 }
             }
@@ -102,6 +80,24 @@ public class ClientFactory extends InstantiationAwareBeanPostProcessorAdapter im
 
 
         return super.postProcessAfterInstantiation(bean, beanName);
+    }
+
+    private boolean connectServer(String nameVersion, List<String> addressList) {
+        try {
+            for (String serviceAddress : addressList) {
+                log.info("serviceAddress {}", serviceAddress);
+                String[] array = StrUtil.split(serviceAddress, ":");
+                String host = array[0];
+                int port = Integer.parseInt(array[1]);
+
+                log.info("name {} host{}:port{}",nameVersion,host,port);
+                RpcClientFactory.startClient(nameVersion,host,port);
+
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
 

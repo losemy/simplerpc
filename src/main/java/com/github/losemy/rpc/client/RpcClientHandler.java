@@ -55,7 +55,7 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
         try {
             log.info("sendRequest {}" , JSON.toJSONString(rpcRequest));
             CompletableFuture<RpcResponse> responseFuture = new CompletableFuture<>();
-            String name = rpcRequest.getInterfaceName() + "-" + rpcRequest.getServiceVersion();
+
             responses.put(rpcRequest.getRequestId(), responseFuture);
             //发送请求
             channel.writeAndFlush(rpcRequest).addListener(new ChannelFutureListener() {
@@ -63,7 +63,7 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
                 public void operationComplete(ChannelFuture future) {
                     log.info("发送请求 " + rpcRequest.getRequestId());
                 }
-            });;
+            });
             log.info("isActive {}", channel.isActive());
             return responseFuture;
         }catch(Exception e){
