@@ -16,17 +16,17 @@ public class Test {
         TestBean testBean = context.getBean(TestBean.class);
         TestBean1 testBean1 = context.getBean(TestBean1.class);
 
-        int i =0;
+        int i =1;
         while(true) {
-            if(i++ > 100){
+            if(i++ > 2){
                 break;
             }
             try {
                 String result = testBean.hello("World");
-                log.info(result);
+                log.info("================="+result);
 
                 String result1 = testBean1.hello("World");
-                log.info(result1);
+                log.info("================="+result1);
                 Thread.currentThread().sleep(10000L);
                 log.info("======================================");
             }catch(Exception e){

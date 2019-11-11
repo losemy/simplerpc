@@ -9,7 +9,10 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * @author lose
@@ -46,9 +49,11 @@ public class RpcClient {
             public void initChannel(SocketChannel channel) throws Exception {
                 ChannelPipeline pipeline = channel.pipeline();
                 //pipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
-                pipeline.addLast(new RpcEncoder(RpcRequest.class)); // 编码 RPC 请求
-                pipeline.addLast(new RpcDecoder(RpcResponse.class)); // 解码 RPC 响应
-                pipeline.addLast(handler); // 处理 RPC 响应
+                pipeline.addLast("encoder",new RpcEncoder(RpcRequest.class)); // 编码 RPC 请求
+                pipeline.addLast("decoder",new RpcDecoder(RpcResponse.class)); // 解码 RPC 响应
+                pipeline.addLast("client-idle-handler", new IdleStateHandler(0, 5000, 0, MILLISECONDS));
+                pipeline.addLast("handler",handler); // 处理 RPC 响应
+
             }
         });
         bootstrap.option(ChannelOption.TCP_NODELAY, true);

@@ -1,6 +1,7 @@
 package com.github.losemy.rpc.client;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -51,6 +52,14 @@ public class RpcClientFactory {
     public static void addRpcClientHandler(RpcClientHandler handler,String host, int port){
         String address = buildAddress(host, port);
         addressHandler.put(address,handler);
+    }
+
+    public static void removeRpcClientHandler(RpcClientHandler handler){
+        for(Map.Entry<String,RpcClientHandler> rpcClientHandlerEntry : addressHandler.entrySet()){
+            if(ObjectUtil.equal(handler,rpcClientHandlerEntry.getValue())){
+                addressHandler.remove(rpcClientHandlerEntry.getKey());
+            }
+        }
     }
 
 

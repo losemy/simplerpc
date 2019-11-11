@@ -12,6 +12,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * @author lose
@@ -84,9 +87,10 @@ public class RpcServer implements ApplicationContextAware, InitializingBean, Dis
                 public void initChannel(SocketChannel channel) throws Exception {
                     ChannelPipeline pipeline = channel.pipeline();
                     //pipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
-                    pipeline.addLast(new RpcDecoder(RpcRequest.class)); // 解码 RPC 请求
-                    pipeline.addLast(new RpcEncoder(RpcResponse.class)); // 编码 RPC 响应
-                    pipeline.addLast(new RpcServerHandler(handlerMap)); // 处理 RPC 请求
+                    pipeline.addLast("decoder",new RpcDecoder(RpcRequest.class)); // 解码 RPC 请求
+                    pipeline.addLast("encoder",new RpcEncoder(RpcResponse.class)); // 编码 RPC 响应
+                    pipeline.addLast("server-idle-handler", new IdleStateHandler(5000, 0, 0, MILLISECONDS));
+                    pipeline.addLast("handler",new RpcServerHandler(handlerMap)); // 处理 RPC 请求
                 }
             });
             bootstrap.option(ChannelOption.SO_BACKLOG, 128);

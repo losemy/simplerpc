@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.github.losemy.rpc.common.bean.RpcRequest;
 import com.github.losemy.rpc.common.bean.RpcResponse;
 import io.netty.channel.*;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +24,21 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
 
     public Channel getChannel() {
         return channel;
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        // send heartbeat when read idle.
+        if (evt instanceof IdleStateEvent){
+            IdleStateEvent event = (IdleStateEvent)evt;
+            log.info("IdleStateEvent {}",event.state());
+            if (event.state()== IdleState.WRITER_IDLE){
+                log.info("长时间未接收到服务端消息");
+                RpcClientFactory.removeRpcClientHandler(this);
+                ctx.writeAndFlush("PING").addListener(ChannelFutureListener.CLOSE_ON_FAILURE) ;
+            }
+        }
+        super.userEventTriggered(ctx, evt);
     }
 
     @Override
