@@ -1,4 +1,4 @@
-package com.github.losemy.rpc.register.zk.strategy;
+package com.github.losemy.rpc.loadbalance;
 
 import java.util.List;
 

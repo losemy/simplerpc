@@ -1,4 +1,4 @@
-package com.github.losemy.rpc.register.zk.strategy;
+package com.github.losemy.rpc.loadbalance;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.RandomUtil;

@@ -16,23 +16,35 @@ public class Test {
         TestBean testBean = context.getBean(TestBean.class);
         TestBean1 testBean1 = context.getBean(TestBean1.class);
 
-        int i =1;
-        while(true) {
-            if(i++ > 2){
-                break;
-            }
-            try {
-                String result = testBean.hello("World");
-                log.info("================="+result);
+        for(int j=0; j< 10; j++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int i = 1;
+                    while (true) {
+                        if (i++ > 100) {
+                            break;
+                        }
+                        try {
+                            String result = testBean.hello("World");
+                            log.info("=================" + result);
 
-                String result1 = testBean1.hello("World");
-                log.info("================="+result1);
-                Thread.currentThread().sleep(10000L);
-                log.info("======================================");
-            }catch(Exception e){
-                log.error("error============",e);
-                Thread.currentThread().sleep(10000L);
-            }
+                            String result1 = testBean1.hello("World");
+                            log.info("=================" + result1);
+                            Thread.currentThread().sleep(1000L);
+                            log.info("======================================");
+                        } catch (Exception e) {
+                            log.error("error============", e);
+                            try {
+                                Thread.currentThread().sleep(1000L);
+                            } catch (InterruptedException ex) {
+                                log.error("error============", e);
+                            }
+                        }
+                    }
+                }
+            }).start();
+
         }
     }
 }

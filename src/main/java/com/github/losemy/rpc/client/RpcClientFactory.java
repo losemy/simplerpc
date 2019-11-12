@@ -27,6 +27,7 @@ public class RpcClientFactory {
             client.start();
             handler = client.getHandler();
         }else{
+            log.info("address already started name ==> {}:{}",name,host,port);
             handler = addressHandler.get(address);
         }
         return handler;
@@ -53,6 +54,7 @@ public class RpcClientFactory {
         String address = buildAddress(host, port);
         addressHandler.put(address,handler);
     }
+
 
     public static void removeRpcClientHandler(RpcClientHandler handler){
         for(Map.Entry<String,RpcClientHandler> rpcClientHandlerEntry : addressHandler.entrySet()){

@@ -50,7 +50,7 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, RpcResponse response) throws Exception {
         String requestId = response.getRequestId();
-        log.info("requestId {}", requestId);
+        log.info("requestId {} responses size {}", requestId,responses.size());
         //异步处理消息返回，有消息就更新 然后get才能够获取到
         CompletableFuture<RpcResponse> rpcFuture = responses.get(requestId);
         if (rpcFuture != null) {
@@ -71,20 +71,28 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
     public CompletableFuture<RpcResponse> sendRequest(RpcRequest rpcRequest){
         try {
             log.info("sendRequest {}" , JSON.toJSONString(rpcRequest));
-            CompletableFuture<RpcResponse> responseFuture = new CompletableFuture<>();
+            boolean isActive = channel.isActive();
+            log.info("isActive {}", isActive);
+            if(isActive) {
+                CompletableFuture<RpcResponse> responseFuture = new CompletableFuture<>();
 
-            responses.put(rpcRequest.getRequestId(), responseFuture);
-            //发送请求
-            channel.writeAndFlush(rpcRequest).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) {
-                    log.info("发送请求 " + rpcRequest.getRequestId());
-                }
-            });
-            log.info("isActive {}", channel.isActive());
-            return responseFuture;
+                responses.put(rpcRequest.getRequestId(), responseFuture);
+                //发送请求
+                channel.writeAndFlush(rpcRequest).addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture future) {
+                        log.info("发送请求 " + rpcRequest.getRequestId());
+                    }
+                });
+
+                return responseFuture;
+            }else{
+                // 关闭当前连接 同时取消数据
+                channel.close();
+                RpcClientFactory.removeRpcClientHandler(this);
+            }
         }catch(Exception e){
-            log.info(e.getMessage());
+            log.error("发送消息失败 " + rpcRequest.getRequestId(),e);
         }
         return null;
     }

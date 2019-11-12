@@ -59,6 +59,7 @@ public class ClientManager extends InstantiationAwareBeanPostProcessorAdapter im
                     // 获取 RPC 服务地址
                     if (serviceDiscovery != null) {
                         addressList = serviceDiscovery.findAllServer(nameVersion);
+
                         log.info("serviceName {} addressList {}",nameVersion,addressList);
                     }
                     if (CollectionUtil.isEmpty(addressList)) {

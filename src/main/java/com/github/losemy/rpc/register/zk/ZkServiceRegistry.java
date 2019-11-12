@@ -12,14 +12,14 @@ import org.I0Itec.zkclient.ZkClient;
  * @date 2019-10-23
  */
 @Slf4j
-public class ZooKeeperServiceRegistry implements ServiceRegistry {
+public class ZkServiceRegistry implements ServiceRegistry {
 
     private final ZkClient zkClient;
 
-    public ZooKeeperServiceRegistry(String zkAddress) {
+    public ZkServiceRegistry(String zkAddress) {
         // 创建 ZooKeeper 客户端
         zkClient = new ZkClient(zkAddress, Constant.ZK_SESSION_TIMEOUT, Constant.ZK_CONNECTION_TIMEOUT);
-        log.debug("connect zookeeper");
+        log.info("connect zookeeper");
     }
 
     @Override

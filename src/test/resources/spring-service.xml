@@ -11,7 +11,7 @@
 
     <context:property-placeholder location="classpath:rpc.properties"/>
 
-    <bean id="serviceRegistry" class="com.github.losemy.rpc.register.zk.ZooKeeperServiceRegistry">
+    <bean id="serviceRegistry" class="com.github.losemy.rpc.register.zk.ZkServiceRegistry">
         <constructor-arg name="zkAddress" value="${rpc.registry_address}"/>
     </bean>
 

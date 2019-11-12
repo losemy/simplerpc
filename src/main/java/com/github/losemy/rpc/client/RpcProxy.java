@@ -59,6 +59,13 @@ public class RpcProxy {
                         // 创建 RPC 客户端对象并发送 RPC 请求
                         String name = ServiceUtil.buildServiceName(request.getInterfaceName(),request.getServiceVersion());
 
+                        return sendRequest(request, name,1);
+                    }
+
+                    private Object sendRequest(RpcRequest request, String name,int retryTimes) throws Exception {
+                        if(retryTimes > 3){
+                            throw new Exception("重试尝试失败，无可用连接");
+                        }
                         String address = serviceDiscovery.discover(name);
 
                         if(StrUtil.isNotEmpty(address)) {
@@ -68,21 +75,26 @@ public class RpcProxy {
                             String host = addressSplit[0];
                             int port = Integer.parseInt(addressSplit[1]);
 
-                            //TODO 依赖于主动调用 也就意味着服务会在失败一次后才成功
                             RpcClientHandler handler = RpcClientFactory.getHandlerByAddress(name, host, port);
 
                             log.info("handler {}", handler != null);
                             if(handler != null) {
                                 CompletableFuture<RpcResponse> rpcResponse = handler.sendRequest(request);
 
-                                RpcResponse response = rpcResponse.get();
-                                if (response.getException() == null) {
-                                    return response.getResult();
-                                } else {
-                                    throw response.getException();
+                                if(rpcResponse != null) {
+                                    RpcResponse response = rpcResponse.get();
+
+                                    if (response.getException() == null) {
+                                        return response.getResult();
+                                    } else {
+                                        throw response.getException();
+                                    }
+                                }else{
+                                    //失败重试
+                                    return sendRequest(request, name, ++retryTimes);
                                 }
                             }else{
-                                throw new Exception("为建立连接");
+                                throw new Exception("未建立连接");
                             }
                         }else{
                             throw new Exception("服务未找到");
