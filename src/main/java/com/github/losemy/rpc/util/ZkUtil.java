@@ -35,13 +35,12 @@ public class ZkUtil {
                     List<String> serverAddress = getServiceAddressByKeys(parentPath,currentChilds);
                     // 不需要管理断连，由心跳机制保证？
                     log.info("register changed servicePath {} address {} ",parentPath,StrUtil.join(",",serverAddress));
-                    serverAddress.stream().forEach( address ->{
+                    serverAddress.stream().forEach( address -> {
                         String[] array = StrUtil.split(address, ":");
                         String host = array[0];
                         int port = Integer.parseInt(array[1]);
                         try {
                             //重新注册，不存在的会被发现
-
                             RpcClientFactory.startClient(serviceName,host,port);
                         } catch (Exception e) {
                             log.error("启动服务失败",e);
@@ -69,7 +68,7 @@ public class ZkUtil {
                 throw new RuntimeException(String.format("can not find any service node on path: %s", servicePath));
             }
             addressList = zkClient.getChildren(servicePath);
-            log.info("addressList {}", StrUtil.join(",",addressList));
+            //log.info("addressList {}", StrUtil.join(",",addressList));
             if (CollectionUtil.isEmpty(addressList)) {
                 log.info("can not find any address node on path {}",servicePath);
             }
