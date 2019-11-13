@@ -6,8 +6,8 @@
 
     <groupId>com.github.losemy</groupId>
     <artifactId>simple-rpc</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-
 
     <properties>
         <netty.version>4.1.42.Final</netty.version>

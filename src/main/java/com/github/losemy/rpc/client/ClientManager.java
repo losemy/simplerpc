@@ -2,6 +2,7 @@ package com.github.losemy.rpc.client;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.github.losemy.rpc.register.ServiceAutoDiscovery;
 import com.github.losemy.rpc.register.ServiceDiscovery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -85,6 +86,10 @@ public class ClientManager extends InstantiationAwareBeanPostProcessorAdapter im
 
     private boolean connectServer(String nameVersion, List<String> addressList) {
         try {
+            ServiceAutoDiscovery autoDiscovery = applicationContext.getBean(ServiceAutoDiscovery.class);
+            if(autoDiscovery != null) {
+                autoDiscovery.autoDiscovery(nameVersion);
+            }
             for (String serviceAddress : addressList) {
                 log.info("serviceAddress {}", serviceAddress);
                 String[] array = StrUtil.split(serviceAddress, ":");
@@ -93,7 +98,6 @@ public class ClientManager extends InstantiationAwareBeanPostProcessorAdapter im
 
                 log.info("name {} host{}:port{}",nameVersion,host,port);
                 RpcClientFactory.startClient(nameVersion,host,port);
-
             }
         }catch (Exception e){
             return false;

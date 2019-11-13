@@ -110,8 +110,8 @@ public class RpcServer implements ApplicationContextAware, InitializingBean, Dis
                 }
             }
             LOGGER.debug("server started on port {}", port);
-            // 关闭 RPC 服务器
-            future.channel().closeFuture().sync();
+            //todo 主要是方便测试，阻塞在这里，而在springboot中不需要
+//            future.channel().closeFuture().sync();
         }catch (Exception e){
             LOGGER.error("开启服务异常",e);
         }

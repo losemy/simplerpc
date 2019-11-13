@@ -62,6 +62,7 @@ public class RpcProxy {
                         return sendRequest(request, name,1);
                     }
 
+                    // 加入调用链路 提前终止等服务
                     private Object sendRequest(RpcRequest request, String name,int retryTimes) throws Exception {
                         if(retryTimes > 3){
                             throw new Exception("重试尝试失败，无可用连接");
@@ -90,7 +91,7 @@ public class RpcProxy {
                                         throw response.getException();
                                     }
                                 }else{
-                                    //失败重试
+                                    //失败重试，连接被动关闭没来得及处理
                                     return sendRequest(request, name, ++retryTimes);
                                 }
                             }else{

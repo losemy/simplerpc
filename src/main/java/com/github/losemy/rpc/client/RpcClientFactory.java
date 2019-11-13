@@ -44,6 +44,7 @@ public class RpcClientFactory {
         RpcClientHandler rpcClientHandler = addressHandler.get(address);
         if(rpcClientHandler == null){
             log.info("对应服务{} 对应服务地址{} 未开启 尝试重连 ",name,address);
+            //有调用且选中才会开启，正常数据可能被本地cache
             rpcClientHandler = startClient(name,host,port);
         }
         return rpcClientHandler;

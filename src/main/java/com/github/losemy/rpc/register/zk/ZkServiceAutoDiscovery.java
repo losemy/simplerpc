@@ -24,6 +24,7 @@ public class ZkServiceAutoDiscovery implements ServiceAutoDiscovery {
     @Override
     public void autoDiscovery(String serviceName) {
         if(!CollUtil.contains(servicePaths,serviceName)){
+            log.info("auto discovery {}",serviceName);
             if(zkUtil.monitorServicePath(serviceName)) {
                 servicePaths.add(serviceName);
             }
