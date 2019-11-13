@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(SimpleRpcProperties.class)
 @ConditionalOnClass({ RpcClient.class, RpcServer.class })
+//matchIfMissing = true表示如果没有在application.properties设置该属性，则默认为条件符合
 @ConditionalOnProperty(prefix = "simple-rpc", value = "registry-address")
 @Slf4j
 public class SimpleRpcAutoConfiguration {

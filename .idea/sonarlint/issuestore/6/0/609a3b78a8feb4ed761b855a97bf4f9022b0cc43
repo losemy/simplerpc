@@ -1,4 +1,4 @@
 
-nsquid:CommentedOutCodeLine,"<This block of commented-out lines of code should be removed.(½¤Ì±úÿÿÿÿ8ä‰•Èß-
-^squid:S18549";Remove this useless assignment to local variable "channel".(Â¹å¸þÿÿÿÿ8ŽÆ¹Äß-
-Osquid:S14819",Remove this unused "channel" local variable.(Â¹å¸þÿÿÿÿ8Â¢¹Äß-
+nsquid:CommentedOutCodeLine3"<This block of commented-out lines of code should be removed.(½¤Ì±úÿÿÿÿ8×³Ïå-
+esquid:S00112("FDefine and throw a dedicated exception instead of using a generic one.(Â¶Ä“8×³Ïå-
+Fsquid:S1068"(Remove this unused "name" private field.(Ú§×œ8À¨¦öå-

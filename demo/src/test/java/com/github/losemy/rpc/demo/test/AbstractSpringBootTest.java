@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = DemoApplication.class)
 public class AbstractSpringBootTest {
 
-
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);

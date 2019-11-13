@@ -7,6 +7,7 @@ import com.github.losemy.rpc.common.bean.RpcResponse;
 import com.github.losemy.rpc.common.codec.RpcDecoder;
 import com.github.losemy.rpc.common.codec.RpcEncoder;
 import com.github.losemy.rpc.register.ServiceRegistry;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -36,8 +37,11 @@ public class RpcServer implements ApplicationContextAware, InitializingBean, Dis
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcServer.class);
 
-    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup(4,new ThreadFactoryBuilder()
+            .setNameFormat("netty-boss-%d").build());
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup(16,new ThreadFactoryBuilder()
+            .setNameFormat("netty-worker-%d").build());
+
     private String serviceAddress;
 
     private ServiceRegistry serviceRegistry;

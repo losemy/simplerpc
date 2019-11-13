@@ -4,6 +4,7 @@ import com.github.losemy.rpc.common.bean.RpcRequest;
 import com.github.losemy.rpc.common.bean.RpcResponse;
 import com.github.losemy.rpc.common.codec.RpcDecoder;
 import com.github.losemy.rpc.common.codec.RpcEncoder;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -39,7 +40,8 @@ public class RpcClient {
 
     public void start() throws Exception {
 
-        EventLoopGroup group = new NioEventLoopGroup();
+        EventLoopGroup group = new NioEventLoopGroup(4,new ThreadFactoryBuilder()
+                .setNameFormat("netty-client-%d").build());
         // 创建并初始化 Netty 客户端 Bootstrap 对象
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(group);

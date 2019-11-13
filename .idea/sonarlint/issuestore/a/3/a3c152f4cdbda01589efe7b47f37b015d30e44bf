@@ -1,8 +1,0 @@
-
-isquid:S3252Q"KUse static access with "cn.hutool.core.collection.CollUtil" for "contains".(ğ÷¤½8£ÛÚß-
-°%squid:RedundantThrowsDeclarationCheck"sRemove the declaration of thrown exception 'org.springframework.beans.BeansException' which is a runtime exception.(ËˆÀİûÿÿÿÿ8ÀÒ„Ãß-
-usquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(ËˆÀİûÿÿÿÿ8È€Æß-
-msquid:S3252D"JUse static access with "cn.hutool.core.collection.CollUtil" for "isEmpty".(Ìšè„ÿÿÿÿÿ8ïàşÅß-
-jsquid:S00112F"FDefine and throw a dedicated exception instead of using a generic one.(¯´‹½úÿÿÿÿ8Ó¬åÅß-
-«%squid:RedundantThrowsDeclarationCheck"sRemove the declaration of thrown exception 'org.springframework.beans.BeansException' which is a runtime exception.(¯¶…œ8º”ÊÃß-
-¥%squid:RedundantThrowsDeclarationCheck$"mRemove the declaration of thrown exception 'java.lang.IllegalArgumentException' which is a runtime exception.(‘ä«š8ÀÒ„Ãß-
