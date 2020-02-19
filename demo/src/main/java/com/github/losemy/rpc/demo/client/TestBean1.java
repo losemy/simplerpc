@@ -20,6 +20,11 @@ public class TestBean1 {
     @RpcReference
     private WorldService worldService;
 
+    /**
+     * 注释2
+     * @param name
+     * @return
+     */
     public String hello(String name){
         log.info(name);
         worldService.hello(name);

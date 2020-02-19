@@ -15,12 +15,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestBean {
 
+
     @RpcReference
     private HelloService helloService;
 
     @RpcReference
     private WorldService worldService;
 
+    /**
+     * 注释1
+     * @param name
+     * @return
+     */
     public String hello(String name){
         log.info(name);
         worldService.hello(name);
