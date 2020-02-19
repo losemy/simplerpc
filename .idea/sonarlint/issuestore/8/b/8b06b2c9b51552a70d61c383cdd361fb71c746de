@@ -1,5 +1,0 @@
-
-Wsquid:S1068"4Remove this unused "lossConnectCount" private field.(Äî¤óÿÿÿÿÿ8±•ÍÒå-
-esquid:S00112M"FDefine and throw a dedicated exception instead of using a generic one.(çÆª8ğÌîĞå-
-‚squid:S1450"_Remove the "lossConnectCount" field and declare it as a local variable in the relevant methods.(Äî¤óÿÿÿÿÿ8±•ÍÒå-
-esquid:S00112D"FDefine and throw a dedicated exception instead of using a generic one.(Ï¾“ù8ğÌîĞå-

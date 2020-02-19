@@ -1,6 +1,0 @@
-
-ˆsquid:S1488*"eImmediately return this expression instead of assigning it to the temporary variable "serverAddress".(‡åã©ıÿÿÿÿ8è–Ùúå-
-msquid:S3252F"JUse static access with "cn.hutool.core.collection.CollUtil" for "isEmpty".(Ìšè„ÿÿÿÿÿ8ÅùàËå-
-lsquid:S2259P"IA "NullPointerException" could be thrown; "addressList" is nullable here.(éºãÍøÿÿÿÿ8õÄÌÌå-
-jsquid:S00112B"FDefine and throw a dedicated exception instead of using a generic one.(Ô¥Şşÿÿÿÿ8ÅùàËå-
-Dsquid:S1075:"&Remove this hard-coded path-delimiter.(š±“´8ÅùàËå-

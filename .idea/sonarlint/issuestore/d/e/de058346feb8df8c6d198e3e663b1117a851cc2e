@@ -1,5 +1,0 @@
-
-msquid:S3252A"JUse static access with "cn.hutool.core.collection.CollUtil" for "isEmpty".(Ìšè„ÿÿÿÿÿ8ïàþÅß-
-¥%squid:RedundantThrowsDeclarationCheck#"mRemove the declaration of thrown exception 'java.lang.IllegalArgumentException' which is a runtime exception.(‘ä«š8ÀÒ„Ãß-
-«%squid:RedundantThrowsDeclarationCheck"sRemove the declaration of thrown exception 'org.springframework.beans.BeansException' which is a runtime exception.(¯¶…œ8º”ÊÃß-
-°%squid:RedundantThrowsDeclarationCheck"sRemove the declaration of thrown exception 'org.springframework.beans.BeansException' which is a runtime exception.(ËˆÀÝûÿÿÿÿ8ÀÒ„Ãß-
